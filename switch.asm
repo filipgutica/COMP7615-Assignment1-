@@ -23,6 +23,8 @@ section .data ;Data segment
     Case2str db 'Case2: '
     Case3str db 'Case3: '
     StrLenCase equ $-Case3str
+    strDefault db 'Default ', 0x0a
+    StrLenDefault equ $-strDefault
 
 
 section .bss    ;Uninitialized data
@@ -156,11 +158,28 @@ _start:
       cmp eax, MIN_NUM        ; check if number is less than 0
       jl get_num3
 
-
-      mov eax, [nvalue]
+  .switch:
+      mov eax, [nvalue]       ; ++nvalue
       inc eax
-      mov [nvalue], eax
-      xor eax, eax
+
+      cmp eax, 0              ; case 0
+      je case_0
+      cmp eax, 1              ; case 1
+      je case_1
+      cmp eax, 2              ; case 2
+      je case_2
+      cmp eax, 3              ; case 3
+      je case_3
+  .default:
+      mov eax, SYS_WRITE          ; write flag
+      mov ebx, STDOUT             ; write to stdout
+      mov ecx, strDefault         ; string to write
+      mov edx, StrLenDefault      ; number of bytes to write
+      int 80h
+
+      ;Exit code
+      mov eax, SYS_EXIT
+      xor ebx, ebx
       int 80h
 
 
@@ -193,6 +212,11 @@ _start:
       mov edx, StrLen           ; number of bytes to write
       int 80h
 
+      ;Exit code
+      mov eax, SYS_EXIT
+      xor ebx, ebx
+      int 80h
+
   case_1:
       mov eax, [num2]           ; move value of num1 to eax
       mov ecx, [num3]           ; move value of num2 to ecx
@@ -200,7 +224,6 @@ _start:
       mov [num], eax            ; move result into num
       xor eax, eax              ; clear eax
       int 80h
-
 
       ; Display Case1
       mov eax, SYS_WRITE        ; write flag
@@ -221,6 +244,11 @@ _start:
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
       mov edx, StrLen           ; number of bytes to write
+      int 80h
+
+      ;Exit code
+      mov eax, SYS_EXIT
+      xor ebx, ebx
       int 80h
 
   case_2:
@@ -251,6 +279,11 @@ _start:
       mov edx, StrLen           ; number of bytes to write
       int 80h
 
+      ;Exit code
+      mov eax, SYS_EXIT
+      xor ebx, ebx
+      int 80h
+
   case_3:
       mov eax, [num1]           ; move value of num1 to eax
       mov ecx, [num3]           ; move value of num3 to ecx
@@ -258,8 +291,6 @@ _start:
       mov [num], eax            ; move result into num
       xor eax, eax              ; clear eax
       int 80h
-
-
 
       ; Display Case3
       mov eax, SYS_WRITE        ; write flag
@@ -281,12 +312,10 @@ _start:
       mov edx, StrLen           ; number of bytes to write
       int 80h
 
-
       ;Exit code
       mov eax, SYS_EXIT
       xor ebx, ebx
       int 80h
-
 
 
 
@@ -299,6 +328,8 @@ string_to_int:
 .next_digit:
     movzx ecx ,byte[edx]  ; get one character
     inc edx               ; move pointer to next byte (increment)
+    cmp ecx, '-'          ; check for handle_negative
+    je .neg
     cmp ecx, '0'          ; check less than '0'
     jl .done
     cmp ecx, '9'          ; check greater than '9'
@@ -308,6 +339,9 @@ string_to_int:
     add eax, ecx          ; append current digit
     jmp .next_digit       ; keep going until done
 .done:
+    ret
+.neg:
+    mov eax, -1
     ret
 
 
