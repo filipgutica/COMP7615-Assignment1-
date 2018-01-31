@@ -313,8 +313,8 @@ int_to_string:
     add edx, 0x30         ; add 0x30 to edx convert int => ascii
     push edx              ; push result to stack
     inc ebx               ; increment my stack push counter
-    test eax, eax         ; is eax 0?
-    jnz .push_chars       ; if eax not 0 repeat
+    cmp eax, 0            ; is eax 0?
+    jg .push_chars        ; if eax not 0 repeat
 
 .pop_chars:
     pop eax               ; pop result from stack into eax
