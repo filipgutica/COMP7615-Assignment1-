@@ -6,7 +6,7 @@ SYS_READ  equ 3
 SYS_WRITE equ 4
 STDIN     equ 0
 STDOUT    equ 1
-MAX_LEN   equ 6
+MAX_LEN   equ 11
 MAX_NUM   equ 65535
 MIN_NUM   equ 0
 
@@ -190,7 +190,7 @@ _start:
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; write InputNum1 to stdout
-      mov edx, StrLenCase       ; number of bytes to write
+      mov edx, StrLen           ; number of bytes to write
       int 80h
 
   case_1:
@@ -220,7 +220,7 @@ _start:
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLenCase       ; number of bytes to write
+      mov edx, StrLen           ; number of bytes to write
       int 80h
 
   case_2:
@@ -248,7 +248,7 @@ _start:
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLenCase       ; number of bytes to write
+      mov edx, StrLen           ; number of bytes to write
       int 80h
 
   case_3:
@@ -278,7 +278,7 @@ _start:
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLenCase       ; number of bytes to write
+      mov edx, StrLen           ; number of bytes to write
       int 80h
 
 
