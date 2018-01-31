@@ -334,7 +334,7 @@ string_to_int:
     jl .done
     cmp ecx, '9'          ; check greater than '9'
     jg .done
-    sub ecx,  0x30        ; convert by subtracting '0' to the int value
+    sub ecx,  '0'         ; convert to ascii by subtracting '0' or 0x30
     imul eax, 10          ; prepare the result for the next character
     add eax, ecx          ; append current digit
     jmp .next_digit       ; keep going until done
@@ -360,7 +360,7 @@ int_to_string:
 .continue_push_chars:
     mov ecx, 10           ; ecx is divisor, devide by 10
     div ecx               ; devide edx by ecx, result in eax remainder in edx
-    add edx, 0x30         ; add 0x30 to edx convert int => ascii
+    add edx, '0'          ; add '0' or 0x30 to edx convert int => ascii
     push edx              ; push result to stack
     inc ebx               ; increment my stack push counter
     cmp eax, 0            ; is eax 0?
