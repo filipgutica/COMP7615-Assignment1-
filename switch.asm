@@ -39,240 +39,240 @@ _start:
 
   ;Prompt User for nvalue
   get_nvalue:
-    mov eax, SYS_WRITE      ; write flag
-    mov ebx, STDOUT         ; write to stdout
-    mov ecx, InputNvalue    ; what to write
-    mov edx, StrLen2        ; number of bytes to write
-    int 80h
+        mov eax, SYS_WRITE      ; write flag
+        mov ebx, STDOUT         ; write to stdout
+        mov ecx, InputNvalue    ; what to write
+        mov edx, StrLen2        ; number of bytes to write
+        int 80h
 
 
-    ;Read and store the user input into nvalue
-    mov eax, SYS_READ       ; read flag
-    mov ebx, STDIN          ; read from stdin
-    mov ecx, nvalue         ; read into nvalue
-    mov edx, MAX_LEN        ; number bytes to be read
-    int 80h
+        ;Read and store the user input into nvalue
+        mov eax, SYS_READ       ; read flag
+        mov ebx, STDIN          ; read from stdin
+        mov ecx, nvalue         ; read into nvalue
+        mov edx, MAX_LEN        ; number bytes to be read
+        int 80h
 
-    ; convert nvalue to int
-    mov edx, nvalue         ; put value to convert into edx
-    call string_to_int      ; eax now contains integer result
-    mov [nvalue], eax       ; move back into nvalue
-    xor eax, eax            ; clear eax
-    int 80h
+        ; convert nvalue to int
+        mov edx, nvalue         ; put value to convert into edx
+        call string_to_int      ; eax now contains integer result
+        mov [nvalue], eax       ; move back into nvalue
+        xor eax, eax            ; clear eax
+        int 80h
 
-    ; validate number
-    mov eax, [nvalue]
-    cmp eax, MAX_NUM
-    jg get_nvalue
-    cmp eax, MIN_NUM
-    jl get_nvalue
+        ; validate number
+        mov eax, [nvalue]
+        cmp eax, MAX_NUM
+        jg get_nvalue
+        cmp eax, MIN_NUM
+        jl get_nvalue
 
-;Prompt User for num1
-get_num1:
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, InputNum1        ; write InputNum1 to stdout
-    mov edx, StrLen           ; number of bytes to write
-    int 80h
+  ;Prompt User for num1
+  get_num1:
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, InputNum1        ; write InputNum1 to stdout
+      mov edx, StrLen           ; number of bytes to write
+      int 80h
 
 
-    ;Read and store the user input into num1
-    mov eax, SYS_READ     ; read
-    mov ebx, STDIN     ; descriptor value for stdin (read from stdin)
-    mov ecx, num1
-    mov edx, MAX_LEN         ;number bytes to be read
-    int 80h
+      ;Read and store the user input into num1
+      mov eax, SYS_READ     ; read
+      mov ebx, STDIN     ; descriptor value for stdin (read from stdin)
+      mov ecx, num1
+      mov edx, MAX_LEN         ;number bytes to be read
+      int 80h
 
-    ; convert num1 to int
-    mov edx, num1
-    call string_to_int      ;eax now contains integer
-    mov [num1], eax
-    xor eax, eax
-    int 80h
+      ; convert num1 to int
+      mov edx, num1
+      call string_to_int      ;eax now contains integer
+      mov [num1], eax
+      xor eax, eax
+      int 80h
 
-    ; validate number
-    mov eax, [num1]
-    cmp eax, MAX_NUM
-    jg get_num1
-    cmp eax, MIN_NUM
-    jl get_num1
+      ; validate number
+      mov eax, [num1]
+      cmp eax, MAX_NUM
+      jg get_num1
+      cmp eax, MIN_NUM
+      jl get_num1
 
 
   ;Prompt User for num2
   get_num2:
-    mov eax, SYS_WRITE      ; write flag
-    mov ebx, STDOUT         ; write to stdout
-    mov ecx, InputNum2      ; what to write
-    mov edx, StrLen         ; number of bytes to write
-    int 80h
+      mov eax, SYS_WRITE      ; write flag
+      mov ebx, STDOUT         ; write to stdout
+      mov ecx, InputNum2      ; what to write
+      mov edx, StrLen         ; number of bytes to write
+      int 80h
 
-    ;Read and store the user input num2
-    mov eax, SYS_READ       ; read flag
-    mov ebx, STDIN          ; read from stdin
-    mov ecx, num2           ; read data into num2
-    mov edx, MAX_LEN        ; number bytes to be read
-    int 80h
+      ;Read and store the user input num2
+      mov eax, SYS_READ       ; read flag
+      mov ebx, STDIN          ; read from stdin
+      mov ecx, num2           ; read data into num2
+      mov edx, MAX_LEN        ; number bytes to be read
+      int 80h
 
-    ; convert num2 to int
-    mov edx, num2
-    call string_to_int      ; eax now contains integer
-    mov [num2], eax
-    xor eax, eax
-    int 80h
+      ; convert num2 to int
+      mov edx, num2
+      call string_to_int      ; eax now contains integer
+      mov [num2], eax
+      xor eax, eax
+      int 80h
 
-    ; validate number
-    mov eax, [num2]
-    cmp eax, MAX_NUM
-    jg get_num2
-    cmp eax, MIN_NUM
-    jl get_num2
+      ; validate number
+      mov eax, [num2]
+      cmp eax, MAX_NUM
+      jg get_num2
+      cmp eax, MIN_NUM
+      jl get_num2
 
   ;Prompt User for num3
   get_num3:
-    mov eax, SYS_WRITE      ; write flag
-    mov ebx, STDOUT         ; write to stdout
-    mov ecx, InputNum3
-    mov edx, StrLen         ; number bytes to write
-    int 80h
+      mov eax, SYS_WRITE      ; write flag
+      mov ebx, STDOUT         ; write to stdout
+      mov ecx, InputNum3
+      mov edx, StrLen         ; number bytes to write
+      int 80h
 
-    ;Read and store the user input num3
-    mov eax, SYS_READ       ; read flag
-    mov ebx, STDIN          ; read from stdin
-    mov ecx, num3
-    mov edx, MAX_LEN        ; number bytes to read
-    int 80h
+      ;Read and store the user input num3
+      mov eax, SYS_READ       ; read flag
+      mov ebx, STDIN          ; read from stdin
+      mov ecx, num3
+      mov edx, MAX_LEN        ; number bytes to read
+      int 80h
 
-    ; convert num3 to int
-    mov edx, num3
-    call string_to_int      ; eax now contains integer
-    mov [num3], eax
-    xor eax, eax
-    int 80h
+      ; convert num3 to int
+      mov edx, num3
+      call string_to_int      ; eax now contains integer
+      mov [num3], eax
+      xor eax, eax
+      int 80h
 
-    ; validate number
-    mov eax, [num3]
-    cmp eax, MAX_NUM        ; check if number is greater than 65535
-    jg get_num3
-    cmp eax, MIN_NUM        ; check if number is less than 0
-    jl get_num3
+      ; validate number
+      mov eax, [num3]
+      cmp eax, MAX_NUM        ; check if number is greater than 65535
+      jg get_num3
+      cmp eax, MIN_NUM        ; check if number is less than 0
+      jl get_num3
 
-case_0:
-    mov eax, [num1]           ; move value of num1 to eax
-    mov ecx, [num2]           ; move value of num2 to ecx
-    imul eax, ecx             ; multiply eax and ecx
-    mov [num], eax            ; move result into num
-    xor eax, eax              ; clear eax
-    int 80h
+  case_0:
+      mov eax, [num1]           ; move value of num1 to eax
+      mov ecx, [num2]           ; move value of num2 to ecx
+      imul eax, ecx             ; multiply eax and ecx
+      mov [num], eax            ; move result into num
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ;Output the number entered
-    mov eax, [num]            ; move value of num into eax
-    mov edi, num              ; move address of num into edi used for stosb to be used in function
-    call int_to_string
-    xor eax, eax              ; clear eax
-    int 80h
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ; Display Case0
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, Case0str         ; write InputNum1 to stdout
-    mov edx, StrLenCase       ; number of bytes to write
-    int 80h
+      ; Display Case0
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, Case0str         ; write InputNum1 to stdout
+      mov edx, StrLenCase       ; number of bytes to write
+      int 80h
 
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, num              ; write InputNum1 to stdout
-    mov edx, StrLen           ; number of bytes to write
-    int 80h
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, num              ; write InputNum1 to stdout
+      mov edx, StrLen           ; number of bytes to write
+      int 80h
 
-case_1:
-    mov eax, [num2]           ; move value of num1 to eax
-    mov ecx, [num3]           ; move value of num2 to ecx
-    imul eax, ecx             ; multiply eax and ecx
-    mov [num], eax            ; move result into num
-    xor eax, eax              ; clear eax
-    int 80h
+  case_1:
+      mov eax, [num2]           ; move value of num1 to eax
+      mov ecx, [num3]           ; move value of num2 to ecx
+      imul eax, ecx             ; multiply eax and ecx
+      mov [num], eax            ; move result into num
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ;Output the number entered
-    mov eax, [num]            ; move value of num into eax
-    mov edi, num              ; move address of num into edi used for stosb to be used in function
-    call int_to_string
-    xor eax, eax              ; clear eax
-    int 80h
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ; Display Case1
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, Case1str         ; string to write
-    mov edx, StrLenCase       ; number of bytes to write
-    int 80h
+      ; Display Case1
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, Case1str         ; string to write
+      mov edx, StrLenCase       ; number of bytes to write
+      int 80h
 
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, num              ; string to write
-    mov edx, StrLen           ; number of bytes to write
-    int 80h
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, num              ; string to write
+      mov edx, StrLen           ; number of bytes to write
+      int 80h
 
-case_2:
-    mov eax, [num3]           ; move value of num3 to eax
-    mov ecx, [num1]           ; move value of num1 to ecx
-    sub eax, ecx              ; subtract eax - ecx
-    mov [num], eax            ; move result into num
-    xor eax, eax              ; clear eax
-    int 80h
+  case_2:
+      mov eax, [num3]           ; move value of num3 to eax
+      mov ecx, [num1]           ; move value of num1 to ecx
+      sub eax, ecx              ; subtract eax - ecx
+      mov [num], eax            ; move result into num
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ;Output the number entered
-    mov eax, [num]            ; move value of num into eax
-    mov edi, num              ; move address of num into edi used for stosb to be used in function
-    call int_to_string
-    xor eax, eax              ; clear eax
-    int 80h
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ; Display Case2
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, Case2str         ; string to write
-    mov edx, StrLenCase       ; number of bytes to write
-    int 80h
+      ; Display Case2
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, Case2str         ; string to write
+      mov edx, StrLenCase       ; number of bytes to write
+      int 80h
 
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, num              ; string to write
-    mov edx, StrLen           ; number of bytes to write
-    int 80h
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, num              ; string to write
+      mov edx, StrLen           ; number of bytes to write
+      int 80h
 
-case_3:
-    mov eax, [num1]           ; move value of num1 to eax
-    mov ecx, [num3]           ; move value of num3 to ecx
-    sub eax, ecx              ; subtract eax - ecx
-    mov [num], eax            ; move result into num
-    xor eax, eax              ; clear eax
-    int 80h
+  case_3:
+      mov eax, [num1]           ; move value of num1 to eax
+      mov ecx, [num3]           ; move value of num3 to ecx
+      sub eax, ecx              ; subtract eax - ecx
+      mov [num], eax            ; move result into num
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ;Output the number entered
-    mov eax, [num]            ; move value of num into eax
-    mov edi, num              ; move address of num into edi used for stosb to be used in function
-    call int_to_string
-    xor eax, eax              ; clear eax
-    int 80h
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
 
-    ; Display Case3
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, Case3str         ; string to display
-    mov edx, StrLenCase       ; number of bytes to write
-    int 80h
+      ; Display Case3
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, Case3str         ; string to display
+      mov edx, StrLenCase       ; number of bytes to write
+      int 80h
 
-    mov eax, SYS_WRITE        ; write flag
-    mov ebx, STDOUT           ; write to stdout
-    mov ecx, num              ; string to write
-    mov edx, StrLen           ; number of bytes to write
-    int 80h
+      mov eax, SYS_WRITE        ; write flag
+      mov ebx, STDOUT           ; write to stdout
+      mov ecx, num              ; string to write
+      mov edx, StrLen           ; number of bytes to write
+      int 80h
 
 
-    ;Exit code
-    mov eax, SYS_EXIT
-    xor ebx, ebx
-    int 80h
+      ;Exit code
+      mov eax, SYS_EXIT
+      xor ebx, ebx
+      int 80h
 
 
 
