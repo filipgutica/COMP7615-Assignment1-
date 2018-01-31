@@ -156,18 +156,19 @@ _start:
       cmp eax, MIN_NUM        ; check if number is less than 0
       jl get_num3
 
+
+      mov eax, [nvalue]
+      inc eax
+      mov [nvalue], eax
+      xor eax, eax
+      int 80h
+
+
   case_0:
       mov eax, [num1]           ; move value of num1 to eax
       mov ecx, [num2]           ; move value of num2 to ecx
       imul eax, ecx             ; multiply eax and ecx
       mov [num], eax            ; move result into num
-      xor eax, eax              ; clear eax
-      int 80h
-
-      ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
-      call int_to_string
       xor eax, eax              ; clear eax
       int 80h
 
@@ -178,10 +179,18 @@ _start:
       mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
+
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
+
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; write InputNum1 to stdout
-      mov edx, StrLen           ; number of bytes to write
+      mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
   case_1:
@@ -192,12 +201,6 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-      ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
-      call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
 
       ; Display Case1
       mov eax, SYS_WRITE        ; write flag
@@ -206,10 +209,18 @@ _start:
       mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
+
+
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLen           ; number of bytes to write
+      mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
   case_2:
@@ -220,13 +231,6 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-      ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
-      call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
-
       ; Display Case2
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
@@ -234,10 +238,17 @@ _start:
       mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
+
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLen           ; number of bytes to write
+      mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
   case_3:
@@ -248,12 +259,7 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-      ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
-      call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
+
 
       ; Display Case3
       mov eax, SYS_WRITE        ; write flag
@@ -262,10 +268,17 @@ _start:
       mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
+      ;Output the number entered
+      mov eax, [num]            ; move value of num into eax
+      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      call int_to_string
+      xor eax, eax              ; clear eax
+      int 80h
+
       mov eax, SYS_WRITE        ; write flag
       mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLen           ; number of bytes to write
+      mov edx, StrLenCase       ; number of bytes to write
       int 80h
 
 
@@ -308,6 +321,9 @@ int_to_string:
     xor   ebx, ebx        ; clear the ebx, I will use as counter for stack pushes
 .push_chars:
     xor edx, edx          ; clear edx
+    cmp eax, 0            ; check less then 0
+    jl .handle_negative   ; handle negative number
+.continue_push_chars:
     mov ecx, 10           ; ecx is divisor, devide by 10
     div ecx               ; devide edx by ecx, result in eax remainder in edx
     add edx, 0x30         ; add 0x30 to edx convert int => ascii
@@ -315,6 +331,7 @@ int_to_string:
     inc ebx               ; increment my stack push counter
     cmp eax, 0            ; is eax 0?
     jg .push_chars        ; if eax not 0 repeat
+    xor edx, edx
 
 .pop_chars:
     pop eax               ; pop result from stack into eax
@@ -326,10 +343,19 @@ int_to_string:
                           ; the (E)DI register is incremented; if the DF flag is 1, the (E)DI register is decremented.)
                           ; The (E)DI register is incremented or decremented by 1 for byte operations,
                           ; by 2 for word operations, or by 4 for ; doubleword operations.
-
     dec ebx               ; decrement my stack push counter
     cmp ebx, 0            ; check if stack push counter is 0
     jg .pop_chars         ; not 0 repeat
     mov eax, 0x0a         ; add line feed
     stosb                 ; write line feed to edi => &num
     ret                   ; return to main
+
+.handle_negative:
+  neg eax                   ; make eax positive
+  mov esi, eax              ; save eax into esi
+  xor eax, eax              ; clear eax
+  mov eax, '-'              ; put '-' into eax
+  stosb                     ; write to edi => num memory location
+  mov eax, esi              ; put original eax value back to eax
+  xor esi, esi              ; clear esi
+  jmp .continue_push_chars  ; continue pushing characters
