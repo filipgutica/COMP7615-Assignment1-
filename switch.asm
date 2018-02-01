@@ -41,7 +41,6 @@ _start:
         call print_string
         int 80h
 
-
         ;Read and store the user input into nvalue
         mov eax, SYS_READ       ; read flag
         mov ebx, STDIN          ; read from stdin
@@ -51,8 +50,8 @@ _start:
 
         ; convert nvalue to int
         mov edx, nvalue         ; put value to convert into edx
-        call string_to_int      ; eax now contains integer result
-        mov [nvalue], eax       ; move back into nvalue
+        call string_to_int      ; convert contents of edx to int, result in eax
+        mov [nvalue], eax       ; move the int from eax back to variable
         xor eax, eax            ; clear eax
         int 80h
 
@@ -70,17 +69,17 @@ _start:
       int 80h
 
       ;Read and store the user input into num1
-      mov eax, SYS_READ     ; read
-      mov ebx, STDIN     ; descriptor value for stdin (read from stdin)
-      mov ecx, num1
-      mov edx, MAX_LEN         ;number bytes to be read
+      mov eax, SYS_READ         ; read flag
+      mov ebx, STDIN            ; read from stdin
+      mov ecx, num1             ; read into num1
+      mov edx, MAX_LEN          ; number bytes to be read
       int 80h
 
       ; convert num1 to int
       mov edx, num1
-      call string_to_int      ;eax now contains integer
-      mov [num1], eax         ;put back into num1
-      xor eax, eax            ;clear eax
+      call string_to_int        ; convert contents of edx to int, result in eax
+      mov [num1], eax           ; move the int from eax back to variable
+      xor eax, eax              ; clear eax
       int 80h
 
       ; validate number
@@ -93,22 +92,22 @@ _start:
 
   ;Prompt User for num2
   get_num2:
-      mov ecx, InputNum2      ; what to write
-      call print_string
+      mov ecx, InputNum2        ; variable to write to stdout
+      call print_string         ; call print string
       int 80h
 
       ;Read and store the user input num2
-      mov eax, SYS_READ       ; read flag
-      mov ebx, STDIN          ; read from stdin
-      mov ecx, num2           ; read data into num2
-      mov edx, MAX_LEN        ; number bytes to be read
+      mov eax, SYS_READ         ; read flag
+      mov ebx, STDIN            ; read from stdin
+      mov ecx, num2             ; read data into num2
+      mov edx, MAX_LEN          ; number bytes to be read
       int 80h
 
       ; convert num2 to int
       mov edx, num2
-      call string_to_int      ; eax now contains integer
-      mov [num2], eax
-      xor eax, eax
+      call string_to_int        ; convert contents of edx to an int, result in eax
+      mov [num2], eax           ; put result back into variable
+      xor eax, eax              ; clear eax
       int 80h
 
       ; validate number
@@ -125,16 +124,16 @@ _start:
       int 80h
 
       ;Read and store the user input num3
-      mov eax, SYS_READ       ; read flag
-      mov ebx, STDIN          ; read from stdin
+      mov eax, SYS_READ         ; read flag
+      mov ebx, STDIN            ; read from stdin
       mov ecx, num3
-      mov edx, MAX_LEN        ; number bytes to read
+      mov edx, MAX_LEN          ; number bytes to read
       int 80h
 
       ; convert num3 to int
       mov edx, num3
-      call string_to_int      ; eax now contains integer
-      mov [num3], eax
+      call string_to_int        ; convert contents of edx to int, result in eax
+      mov [num3], eax           ; put result back into variable
       xor eax, eax
       int 80h
 
@@ -177,7 +176,7 @@ _start:
       int 80h
 
       ; Display Case0
-      mov ecx, Case0str         ; write InputNum1 to stdout
+      mov ecx, Case0str         ; write case 0 to stdout
       call print_string
       int 80h
 
@@ -388,7 +387,7 @@ int_to_string:
 ; None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 print_string:
-  call strlen               ; load length of string into edi
+  call strlen               ; load length of string into edx
   mov eax, SYS_WRITE        ; write flag
   mov ebx, STDOUT           ; write to stdout
   ret
