@@ -6,7 +6,7 @@ SYS_READ    equ 3
 SYS_WRITE   equ 4
 STDIN       equ 0
 STDOUT      equ 1
-MAX_LEN     equ 11
+MAX_LEN     equ 6
 MAX_NUM     equ 65535
 MIN_NUM     equ 0
 
@@ -336,37 +336,37 @@ string_to_int:
 ; None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 int_to_string:
-    xor   ebx, ebx        ; clear the ebx, I will use as counter for stack pushes
+    xor   ebx, ebx          ; clear the ebx, I will use as counter for stack pushes
 .push_chars:
-    xor edx, edx          ; clear edx
-    cmp eax, 0            ; check less then 0
-    jl .handle_negative   ; handle negative number
+    xor edx, edx            ; clear edx
+    cmp eax, 0              ; check less then 0
+    jl .handle_negative     ; handle negative number
 .continue_push_chars:
-    mov ecx, 10           ; ecx is divisor, devide by 10
-    div ecx               ; devide edx by ecx, result in eax remainder in edx
-    add edx, '0'          ; add '0' or 0x30 to edx convert int => ascii
-    push edx              ; push result to stack
-    inc ebx               ; increment my stack push counter
-    cmp eax, 0            ; is eax 0?
-    jg .push_chars        ; if eax not 0 repeat
+    mov ecx, 10             ; ecx is divisor, devide by 10
+    div ecx                 ; devide edx by ecx, result in eax remainder in edx
+    add edx, '0'            ; add '0' or 0x30 to edx convert int => ascii
+    push edx                ; push result to stack
+    inc ebx                 ; increment my stack push counter
+    cmp eax, 0              ; is eax 0?
+    jg .push_chars          ; if eax not 0 repeat
     xor edx, edx
 
 .pop_chars:
-    pop eax               ; pop result from stack into eax
+    pop eax                 ; pop result from stack into eax
 
-    stosb                 ; store contents of eax in edi, which holds the address of num... From stosb documentation:
-                          ; After the byte, word, or doubleword is transferred from the AL, AX, or EAX register to
-                          ; the memory location, the (E)DI register is incremented or decremented automatically
-                          ; according to the setting of the DF flag in the EFLAGS register. (If the DF flag is 0,
-                          ; the (E)DI register is incremented; if the DF flag is 1, the (E)DI register is decremented.)
-                          ; The (E)DI register is incremented or decremented by 1 for byte operations,
-                          ; by 2 for word operations, or by 4 for ; doubleword operations.
-    dec ebx               ; decrement my stack push counter
-    cmp ebx, 0            ; check if stack push counter is 0
-    jg .pop_chars         ; not 0 repeat
-    mov eax, 0x0a         ; add line feed
-    stosb                 ; write line feed to edi => &num
-    ret                   ; return to main
+    stosb                   ; store contents of eax in edi, which holds the address of num... From stosb documentation:
+                            ; After the byte, word, or doubleword is transferred from the AL, AX, or EAX register to
+                            ; the memory location, the (E)DI register is incremented or decremented automatically
+                            ; according to the setting of the DF flag in the EFLAGS register. (If the DF flag is 0,
+                            ; the (E)DI register is incremented; if the DF flag is 1, the (E)DI register is decremented.)
+                            ; The (E)DI register is incremented or decremented by 1 for byte operations,
+                            ; by 2 for word operations, or by 4 for ; doubleword operations.
+    dec ebx                 ; decrement my stack push counter
+    cmp ebx, 0              ; check if stack push counter is 0
+    jg .pop_chars           ; not 0 repeat
+    mov eax, 0x0a           ; add line feed
+    stosb                   ; write line feed to edi => &num
+    ret                     ; return to main
 
 .handle_negative:
   neg eax                   ; make eax positive
