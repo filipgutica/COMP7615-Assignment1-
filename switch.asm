@@ -79,8 +79,8 @@ _start:
       ; convert num1 to int
       mov edx, num1
       call string_to_int      ;eax now contains integer
-      mov [num1], eax
-      xor eax, eax
+      mov [num1], eax         ;put back into num1
+      xor eax, eax            ;clear eax
       int 80h
 
       ; validate number
@@ -286,12 +286,17 @@ _start:
       int 80h
 
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; function string_to_int
+; converts the provided ascii string to an integer
+;
 ; Input:
 ; EDX = pointer to the string to convert
 ; Output:
 ; EAX = integer value
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 string_to_int:
+    push edi              ; save edi, I will use as negative flag
     xor eax,eax           ; clear eax which will hold the result
 .next_digit:
     movzx ecx ,byte[edx]  ; get one character
@@ -307,18 +312,29 @@ string_to_int:
     add eax, ecx          ; append current digit
     jmp .next_digit       ; keep going until done
 .done:
+    cmp edi, 0            ; edi less than 0?
+    jl .done_neg          ; its a negative number jump to done_neg
+    pop edi               ; restore edi
     ret
 .neg:
-    mov eax, -1
+    mov edi, -1
+    jmp .next_digit
+.done_neg:
+    neg eax               ; 2's complement result, make negative
+    pop edi               ; restore edi
     ret
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; function int_to_string
+; converts provided integer to ascii string
+; Example of an in/out parameter function
+;
 ; Input
 ; EAX = pointer to the int to convert
 ; EDI = address of the result
 ; Output:
 ; None
-; Example of an in/out parameter function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 int_to_string:
     xor   ebx, ebx        ; clear the ebx, I will use as counter for stack pushes
 .push_chars:
@@ -362,22 +378,30 @@ int_to_string:
   xor esi, esi              ; clear esi
   jmp .continue_push_chars  ; continue pushing characters
 
-
-;Input
-;ECX = string to Display to STDOUT
-;Output:
-;None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; function print_string
+; writes provided string to stdout
+;
+; Input
+; ECX = string to Display to STDOUT
+; Output:
+; None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 print_string:
   call strlen               ; load length of string into edi
   mov eax, SYS_WRITE        ; write flag
   mov ebx, STDOUT           ; write to stdout
   ret
 
-
-;Input
-;ECX = string to asess
-;Output
-;EDX = length of string
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; function strlen
+; counts the number of characters in provided string
+;
+; Input
+; ECX = string to asess
+; Output
+; EDX = length of string
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 strlen:
   push eax                  ; save and clear counter
   xor eax, eax              ; clear counter
