@@ -1,30 +1,26 @@
 ; Assemble as: nasm -f elf -g switch.asm
 ; Link as: ld -m elf_i386 -o switch switch.o
 
-SYS_EXIT  equ 1
-SYS_READ  equ 3
-SYS_WRITE equ 4
-STDIN     equ 0
-STDOUT    equ 1
-MAX_LEN   equ 11
-MAX_NUM   equ 65535
-MIN_NUM   equ 0
+SYS_EXIT    equ 1
+SYS_READ    equ 3
+SYS_WRITE   equ 4
+STDIN       equ 0
+STDOUT      equ 1
+MAX_LEN     equ 11
+MAX_NUM     equ 65535
+MIN_NUM     equ 0
 
 
 section .data ;Data segment
-    InputNum1 db 'Enter num1: '
-    InputNum2 db 'Enter num2: '
-    InputNum3 db 'Enter num3: '
-    StrLen equ $-InputNum3          ; All InputNum same size, can reuse
-    InputNvalue dw 'Enter nValue: '
-    StrLen2 equ $-InputNvalue
-    Case0str db 'Case0: '
-    Case1str db 'Case1: '
-    Case2str db 'Case2: '
-    Case3str db 'Case3: '
-    StrLenCase equ $-Case3str
-    strDefault db 'Default ', 0x0a
-    StrLenDefault equ $-strDefault
+    InputNum1     db 'Enter num1: ', 0
+    InputNum2     db 'Enter num2: ', 0
+    InputNum3     db 'Enter num3: ', 0
+    InputNvalue   db 'Enter nValue: ', 0
+    Case0str      db 'Case0: ', 0
+    Case1str      db 'Case1: ', 0
+    Case2str      db 'Case2: ', 0
+    Case3str      db 'Case3: ', 0
+    strDefault    db 'Default ', 0x0a, 0
 
 
 section .bss    ;Uninitialized data
@@ -41,10 +37,8 @@ _start:
 
   ;Prompt User for nvalue
   get_nvalue:
-        mov eax, SYS_WRITE      ; write flag
-        mov ebx, STDOUT         ; write to stdout
-        mov ecx, InputNvalue    ; what to write
-        mov edx, StrLen2        ; number of bytes to write
+        mov ecx, InputNvalue      ; write InputNum1 to stdout
+        call print_string
         int 80h
 
 
@@ -71,12 +65,9 @@ _start:
 
   ;Prompt User for num1
   get_num1:
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, InputNum1        ; write InputNum1 to stdout
-      mov edx, StrLen           ; number of bytes to write
+      call print_string
       int 80h
-
 
       ;Read and store the user input into num1
       mov eax, SYS_READ     ; read
@@ -102,10 +93,8 @@ _start:
 
   ;Prompt User for num2
   get_num2:
-      mov eax, SYS_WRITE      ; write flag
-      mov ebx, STDOUT         ; write to stdout
       mov ecx, InputNum2      ; what to write
-      mov edx, StrLen         ; number of bytes to write
+      call print_string
       int 80h
 
       ;Read and store the user input num2
@@ -131,10 +120,8 @@ _start:
 
   ;Prompt User for num3
   get_num3:
-      mov eax, SYS_WRITE      ; write flag
-      mov ebx, STDOUT         ; write to stdout
       mov ecx, InputNum3
-      mov edx, StrLen         ; number bytes to write
+      call print_string
       int 80h
 
       ;Read and store the user input num3
@@ -171,10 +158,8 @@ _start:
       cmp eax, 3              ; case 3
       je case_3
   .default:
-      mov eax, SYS_WRITE          ; write flag
-      mov ebx, STDOUT             ; write to stdout
       mov ecx, strDefault         ; string to write
-      mov edx, StrLenDefault      ; number of bytes to write
+      call print_string
       int 80h
 
       ;Exit code
@@ -192,10 +177,8 @@ _start:
       int 80h
 
       ; Display Case0
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, Case0str         ; write InputNum1 to stdout
-      mov edx, StrLenCase       ; number of bytes to write
+      call print_string
       int 80h
 
 
@@ -206,10 +189,8 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
-      mov ecx, num              ; write InputNum1 to stdout
-      mov edx, StrLen           ; number of bytes to write
+      mov ecx, num              ; string to write
+      call print_string
       int 80h
 
       ;Exit code
@@ -226,10 +207,8 @@ _start:
       int 80h
 
       ; Display Case1
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, Case1str         ; string to write
-      mov edx, StrLenCase       ; number of bytes to write
+      call print_string
       int 80h
 
       ;Output the number entered
@@ -239,11 +218,8 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLen           ; number of bytes to write
+      call print_string
       int 80h
 
       ;Exit code
@@ -260,10 +236,8 @@ _start:
       int 80h
 
       ; Display Case2
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, Case2str         ; string to write
-      mov edx, StrLenCase       ; number of bytes to write
+      call print_string
       int 80h
 
       ;Output the number entered
@@ -273,10 +247,8 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLen           ; number of bytes to write
+      call print_string
       int 80h
 
       ;Exit code
@@ -293,10 +265,8 @@ _start:
       int 80h
 
       ; Display Case3
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, Case3str         ; string to display
-      mov edx, StrLenCase       ; number of bytes to write
+      call print_string
       int 80h
 
       ;Output the number entered
@@ -306,10 +276,8 @@ _start:
       xor eax, eax              ; clear eax
       int 80h
 
-      mov eax, SYS_WRITE        ; write flag
-      mov ebx, STDOUT           ; write to stdout
       mov ecx, num              ; string to write
-      mov edx, StrLen           ; number of bytes to write
+      call print_string
       int 80h
 
       ;Exit code
@@ -393,3 +361,35 @@ int_to_string:
   mov eax, esi              ; put original eax value back to eax
   xor esi, esi              ; clear esi
   jmp .continue_push_chars  ; continue pushing characters
+
+
+;Input
+;ECX = string to Display to STDOUT
+;Output:
+;None
+print_string:
+  call strlen               ; load length of string into edi
+  mov eax, SYS_WRITE        ; write flag
+  mov ebx, STDOUT           ; write to stdout
+  ret
+
+
+;Input
+;ECX = string to asess
+;Output
+;EDX = length of string
+strlen:
+  push eax                  ; save and clear counter
+  xor eax, eax              ; clear counter
+  push ecx                  ; save contents of ecx
+next:
+  cmp [ecx], byte 0         ; check for null character
+  jz null_char              ; exit if null character
+  inc eax                   ; increment counter
+  inc ecx                   ; increment string pointer
+  jmp next                  ; keep going
+null_char:
+  mov edx, eax              ; put value of counter into edx (length of string)
+  pop ecx                   ; restore ecx (original string)
+  pop eax                   ; restore eax
+  ret                       ; return
