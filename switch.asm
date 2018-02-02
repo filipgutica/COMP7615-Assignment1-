@@ -6,7 +6,7 @@ SYS_READ    equ 3
 SYS_WRITE   equ 4
 STDIN       equ 0
 STDOUT      equ 1
-MAX_LEN     equ 6
+MAX_LEN     equ 32
 MAX_NUM     equ 65535
 MIN_NUM     equ 0
 
