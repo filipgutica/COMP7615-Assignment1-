@@ -1,14 +1,14 @@
 ; Assemble as: nasm -f elf -g switch.asm
 ; Link as: ld -m elf_i386 -o switch switch.o
 
-SYS_EXIT    equ 1
-SYS_READ    equ 3
-SYS_WRITE   equ 4
-STDIN       equ 0
-STDOUT      equ 1
-MAX_LEN     equ 6
-MAX_NUM     equ 65535
-MIN_NUM     equ 0
+SYS_EXIT  equ 60
+SYS_READ  equ 0
+SYS_WRITE equ 1
+STDIN     equ 0
+STDOUT    equ 1
+MAX_LEN   equ 6
+MAX_NUM   equ 65535
+MIN_NUM   equ 0
 
 
 section .data ;Data segment
@@ -37,252 +37,240 @@ _start:
 
   ;Prompt User for nvalue
   get_nvalue:
-        mov ecx, InputNvalue      ; write InputNum1 to stdout
+        mov rsi, InputNvalue      ; write InputNum1 to stdout
         call print_string
-        int 80h
+        syscall
 
         ;Read and store the user input into nvalue
-        mov eax, SYS_READ       ; read flag
-        mov ebx, STDIN          ; read from stdin
-        mov ecx, nvalue         ; read into nvalue
-        mov edx, MAX_LEN        ; number bytes to be read
-        int 80h
+        mov rax, SYS_READ       ; read flag
+        mov rdi, STDIN          ; read from stdin
+        mov rsi, nvalue         ; read into nvalue
+        mov rdx, MAX_LEN        ; number bytes to be read
+        syscall
 
         ; convert nvalue to int
-        mov edx, nvalue         ; put value to convert into edx
-        call string_to_int      ; convert contents of edx to int, result in eax
-        mov [nvalue], eax       ; move the int from eax back to variable
-        xor eax, eax            ; clear eax
-        int 80h
+        mov rdx, nvalue         ; put value to convert into rdx
+        call string_to_int      ; convert contents of rdx to int, result in rax
+        mov [nvalue], rax       ; move the int from rax back to variable
+        xor rax, rax            ; clear rax
 
         ; validate number
-        mov eax, [nvalue]
-        cmp eax, MAX_NUM
+        mov rax, [nvalue]
+        cmp rax, MAX_NUM
         jg get_nvalue
-        cmp eax, MIN_NUM
+        cmp rax, MIN_NUM
         jl get_nvalue
 
   ;Prompt User for num1
   get_num1:
-      mov ecx, InputNum1        ; write InputNum1 to stdout
+      mov rsi, InputNum1        ; write InputNum1 to stdout
       call print_string
-      int 80h
+      syscall
 
       ;Read and store the user input into num1
-      mov eax, SYS_READ         ; read flag
-      mov ebx, STDIN            ; read from stdin
-      mov ecx, num1             ; read into num1
-      mov edx, MAX_LEN          ; number bytes to be read
-      int 80h
+      mov rax, SYS_READ         ; read flag
+      mov rdi, STDIN            ; read from stdin
+      mov rsi, num1             ; read into num1
+      mov rdx, MAX_LEN          ; number bytes to be read
+      syscall
 
       ; convert num1 to int
-      mov edx, num1
-      call string_to_int        ; convert contents of edx to int, result in eax
-      mov [num1], eax           ; move the int from eax back to variable
-      xor eax, eax              ; clear eax
-      int 80h
+      mov rdx, num1
+      call string_to_int        ; convert contents of rdx to int, result in rax
+      mov [num1], rax           ; move the int from rax back to variable
+      xor rax, rax              ; clear rax
 
       ; validate number
-      mov eax, [num1]
-      cmp eax, MAX_NUM
+      mov rax, [num1]
+      cmp rax, MAX_NUM
       jg get_num1
-      cmp eax, MIN_NUM
+      cmp rax, MIN_NUM
       jl get_num1
 
 
   ;Prompt User for num2
   get_num2:
-      mov ecx, InputNum2        ; variable to write to stdout
+      mov rsi, InputNum2        ; variable to write to stdout
       call print_string         ; call print string
-      int 80h
+      syscall
 
       ;Read and store the user input num2
-      mov eax, SYS_READ         ; read flag
-      mov ebx, STDIN            ; read from stdin
-      mov ecx, num2             ; read data into num2
-      mov edx, MAX_LEN          ; number bytes to be read
-      int 80h
+      mov rax, SYS_READ         ; read flag
+      mov rdi, STDIN            ; read from stdin
+      mov rsi, num2             ; read data into num2
+      mov rdx, MAX_LEN          ; number bytes to be read
+      syscall
 
       ; convert num2 to int
-      mov edx, num2
-      call string_to_int        ; convert contents of edx to an int, result in eax
-      mov [num2], eax           ; put result back into variable
-      xor eax, eax              ; clear eax
-      int 80h
+      mov rdx, num2
+      call string_to_int        ; convert contents of rdx to an int, result in rax
+      mov [num2], rax           ; put result back into variable
+      xor rax, rax              ; clear rax
 
       ; validate number
-      mov eax, [num2]
-      cmp eax, MAX_NUM
+      mov rax, [num2]
+      cmp rax, MAX_NUM
       jg get_num2
-      cmp eax, MIN_NUM
+      cmp rax, MIN_NUM
       jl get_num2
 
   ;Prompt User for num3
   get_num3:
-      mov ecx, InputNum3
+      mov rsi, InputNum3
       call print_string
-      int 80h
+      syscall
 
       ;Read and store the user input num3
-      mov eax, SYS_READ         ; read flag
-      mov ebx, STDIN            ; read from stdin
-      mov ecx, num3
-      mov edx, MAX_LEN          ; number bytes to read
-      int 80h
+      mov rax, SYS_READ         ; read flag
+      mov rdi, STDIN            ; read from stdin
+      mov rsi, num3
+      mov rdx, MAX_LEN          ; number bytes to read
+      syscall
 
       ; convert num3 to int
-      mov edx, num3
-      call string_to_int        ; convert contents of edx to int, result in eax
-      mov [num3], eax           ; put result back into variable
-      xor eax, eax
-      int 80h
+      mov rdx, num3
+      call string_to_int        ; convert contents of rdx to int, result in rax
+      mov [num3], rax           ; put result back into variable
+      xor rax, rax
 
       ; validate number
-      mov eax, [num3]
-      cmp eax, MAX_NUM        ; check if number is greater than 65535
+      mov rax, [num3]
+      cmp rax, MAX_NUM        ; check if number is greater than 65535
       jg get_num3
-      cmp eax, MIN_NUM        ; check if number is less than 0
+      cmp rax, MIN_NUM        ; check if number is less than 0
       jl get_num3
 
   .switch:
-      mov eax, [nvalue]       ; ++nvalue
-      inc eax
+      mov rax, [nvalue]       ; ++nvalue
+      inc rax
 
-      cmp eax, 0              ; case 0
+      cmp rax, 0              ; case 0
       je case_0
-      cmp eax, 1              ; case 1
+      cmp rax, 1              ; case 1
       je case_1
-      cmp eax, 2              ; case 2
+      cmp rax, 2              ; case 2
       je case_2
-      cmp eax, 3              ; case 3
+      cmp rax, 3              ; case 3
       je case_3
   .default:
-      mov ecx, strDefault         ; string to write
+      mov rsi, strDefault         ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Exit code
-      mov eax, SYS_EXIT
-      xor ebx, ebx
-      int 80h
+      mov rax, SYS_EXIT
+      xor rdi, rdi
+      syscall
 
 
   case_0:
-      mov eax, [num1]           ; move value of num1 to eax
-      mov ecx, [num2]           ; move value of num2 to ecx
-      imul eax, ecx             ; multiply eax and ecx
-      mov [num], eax            ; move result into num
-      xor eax, eax              ; clear eax
-      int 80h
+      mov rax, [num1]           ; move value of num1 to rax
+      mov rcx, [num2]           ; move value of num2 to rcx
+      imul rax, rcx             ; multiply rax and rcx
+      mov [num], rax            ; move result into num
+      xor rax, rax              ; clear rax
 
       ; Display Case0
-      mov ecx, Case0str         ; write case 0 to stdout
+      mov rsi, Case0str         ; write case 0 to stdout
       call print_string
-      int 80h
+      syscall
 
 
       ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      mov rax, [num]            ; move value of num into rax
+      mov rdi, num              ; move address of num into rdi used for stosb to be used in function
       call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
+      xor rax, rax              ; clear rax
 
-      mov ecx, num              ; string to write
+      mov rsi, num              ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Exit code
-      mov eax, SYS_EXIT
-      xor ebx, ebx
-      int 80h
+      mov rax, SYS_EXIT
+      xor rdi, rdi
+      syscall
 
   case_1:
-      mov eax, [num2]           ; move value of num1 to eax
-      mov ecx, [num3]           ; move value of num2 to ecx
-      imul eax, ecx             ; multiply eax and ecx
-      mov [num], eax            ; move result into num
-      xor eax, eax              ; clear eax
-      int 80h
+      mov rbx, [num2]           ; move value of num1 to rax
+      mov rcx, [num3]           ; move value of num2 to rcx
+      imul rbx, rcx             ; multiply rax and rcx
+      mov [num], rbx            ; move result into num
+      xor rax, rax              ; clear rax
 
       ; Display Case1
-      mov ecx, Case1str         ; string to write
+      mov rsi, Case1str         ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      mov rax, [num]            ; move value of num into rax
+      mov rdi, num              ; move address of num into rdi used for stosb to be used in function
       call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
+      xor rax, rax              ; clear rax
 
-      mov ecx, num              ; string to write
+      mov rsi, num              ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Exit code
-      mov eax, SYS_EXIT
-      xor ebx, ebx
-      int 80h
+      mov rax, SYS_EXIT
+      xor rdi, rdi
+      syscall
 
   case_2:
-      mov eax, [num3]           ; move value of num3 to eax
-      mov ecx, [num1]           ; move value of num1 to ecx
-      sub eax, ecx              ; subtract eax - ecx
-      mov [num], eax            ; move result into num
-      xor eax, eax              ; clear eax
-      int 80h
+      mov rax, [num3]           ; move value of num3 to rax
+      mov rcx, [num1]           ; move value of num1 to rcx
+      sub rax, rcx              ; subtract rax - rcx
+      mov [num], rax            ; move result into num
+      xor rax, rax              ; clear rax
 
       ; Display Case2
-      mov ecx, Case2str         ; string to write
+      mov rsi, Case2str         ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      mov rax, [num]            ; move value of num into rax
+      mov rdi, num              ; move address of num into rdi used for stosb to be used in function
       call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
+      xor rax, rax              ; clear rax
 
-      mov ecx, num              ; string to write
+      mov rsi, num              ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Exit code
-      mov eax, SYS_EXIT
-      xor ebx, ebx
-      int 80h
+      mov rax, SYS_EXIT
+      xor rdi, rdi
+      syscall
 
   case_3:
-      mov eax, [num1]           ; move value of num1 to eax
-      mov ecx, [num3]           ; move value of num3 to ecx
-      sub eax, ecx              ; subtract eax - ecx
-      mov [num], eax            ; move result into num
-      xor eax, eax              ; clear eax
-      int 80h
+      mov rax, [num1]           ; move value of num1 to rax
+      mov rcx, [num3]           ; move value of num3 to rcx
+      sub rax, rcx              ; subtract rax - rcx
+      mov [num], rax            ; move result into num
+      xor rax, rax              ; clear rax
 
       ; Display Case3
-      mov ecx, Case3str         ; string to display
+      mov rsi, Case3str         ; string to display
       call print_string
-      int 80h
+      syscall
 
       ;Output the number entered
-      mov eax, [num]            ; move value of num into eax
-      mov edi, num              ; move address of num into edi used for stosb to be used in function
+      mov rax, [num]            ; move value of num into rax
+      mov rdi, num              ; move address of num into rdi used for stosb to be used in function
       call int_to_string
-      xor eax, eax              ; clear eax
-      int 80h
+      xor rax, rax              ; clear rax
 
-      mov ecx, num              ; string to write
+      mov rsi, num              ; string to write
       call print_string
-      int 80h
+      syscall
 
       ;Exit code
-      mov eax, SYS_EXIT
-      xor ebx, ebx
-      int 80h
+      mov rax, SYS_EXIT
+      xor rdi, rdi
+      syscall
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -290,37 +278,37 @@ _start:
 ; converts the provided ascii string to an integer
 ;
 ; Input:
-; EDX = pointer to the string to convert
+; rdx = pointer to the string to convert
 ; Output:
-; EAX = integer value
+; rax = integer value
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 string_to_int:
-    push edi              ; save edi, I will use as negative flag
-    xor eax,eax           ; clear eax which will hold the result
+    push rdi              ; save rdi, I will use as negative flag
+    xor rax,rax           ; clear rax which will hold the result
 .next_digit:
-    movzx ecx ,byte[edx]  ; get one character
-    inc edx               ; move pointer to next byte (increment)
-    cmp ecx, '-'          ; check for handle_negative
+    movzx rcx ,byte[rdx]  ; get one character
+    inc rdx               ; move pointer to next byte (increment)
+    cmp rcx, '-'          ; check for handle_negative
     je .neg
-    cmp ecx, '0'          ; check less than '0'
+    cmp rcx, '0'          ; check less than '0'
     jl .done
-    cmp ecx, '9'          ; check greater than '9'
+    cmp rcx, '9'          ; check greater than '9'
     jg .done
-    sub ecx,  '0'         ; convert to ascii by subtracting '0' or 0x30
-    imul eax, 10          ; prepare the result for the next character
-    add eax, ecx          ; append current digit
+    sub rcx,  '0'         ; convert to ascii by subtracting '0' or 0x30
+    imul rax, 10          ; prepare the result for the next character
+    add rax, rcx          ; append current digit
     jmp .next_digit       ; keep going until done
 .done:
-    cmp edi, 0            ; edi less than 0?
+    cmp rdi, 0            ; rdi less than 0?
     jl .done_neg          ; its a negative number jump to done_neg
-    pop edi               ; restore edi
+    pop rdi               ; restore rdi
     ret
 .neg:
-    mov edi, -1
+    mov rdi, -1
     jmp .next_digit
 .done_neg:
-    neg eax               ; 2's complement result, make negative
-    pop edi               ; restore edi
+    neg rax               ; 2's complement result, make negative
+    pop rdi               ; restore rdi
     ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -329,52 +317,52 @@ string_to_int:
 ; Example of an in/out parameter function
 ;
 ; Input
-; EAX = pointer to the int to convert
-; EDI = address of the result
+; rax = pointer to the int to convert
+; rdi = address of the result
 ; Output:
 ; None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 int_to_string:
-    xor   ebx, ebx          ; clear the ebx, I will use as counter for stack pushes
+    xor   rbx, rbx          ; clear the rbx, I will use as counter for stack pushes
 .push_chars:
-    xor edx, edx            ; clear edx
-    cmp eax, 0              ; check less then 0
+    xor rdx, rdx            ; clear rdx
+    cmp rax, 0              ; check less then 0
     jl .handle_negative     ; handle negative number
 .continue_push_chars:
-    mov ecx, 10             ; ecx is divisor, devide by 10
-    div ecx                 ; devide edx by ecx, result in eax remainder in edx
-    add edx, '0'            ; add '0' or 0x30 to edx convert int => ascii
-    push edx                ; push result to stack
-    inc ebx                 ; increment my stack push counter
-    cmp eax, 0              ; is eax 0?
-    jg .push_chars          ; if eax not 0 repeat
-    xor edx, edx
+    mov rcx, 10             ; rcx is divisor, devide by 10
+    div rcx                 ; devide rdx by rcx, result in rax remainder in rdx
+    add rdx, '0'            ; add '0' or 0x30 to rdx convert int => ascii
+    push rdx                ; push result to stack
+    inc rbx                 ; increment my stack push counter
+    cmp rax, 0              ; is rax 0?
+    jg .push_chars          ; if rax not 0 repeat
+    xor rdx, rdx
 
 .pop_chars:
-    pop eax                 ; pop result from stack into eax
+    pop rax                 ; pop result from stack into rax
 
-    stosb                   ; store contents of eax in edi, which holds the address of num... From stosb documentation:
-                            ; After the byte, word, or doubleword is transferred from the AL, AX, or EAX register to
+    stosb                   ; store contents of rax in rdi, which holds the address of num... From stosb documentation:
+                            ; After the byte, word, or doubleword is transferred from the AL, AX, or rax register to
                             ; the memory location, the (E)DI register is incremented or decremented automatically
                             ; according to the setting of the DF flag in the EFLAGS register. (If the DF flag is 0,
                             ; the (E)DI register is incremented; if the DF flag is 1, the (E)DI register is decremented.)
                             ; The (E)DI register is incremented or decremented by 1 for byte operations,
                             ; by 2 for word operations, or by 4 for ; doubleword operations.
-    dec ebx                 ; decrement my stack push counter
-    cmp ebx, 0              ; check if stack push counter is 0
+    dec rbx                 ; decrement my stack push counter
+    cmp rbx, 0              ; check if stack push counter is 0
     jg .pop_chars           ; not 0 repeat
-    mov eax, 0x0a           ; add line feed
-    stosb                   ; write line feed to edi => &num
+    mov rax, 0x0a           ; add line feed
+    stosb                   ; write line feed to rdi => &num
     ret                     ; return to main
 
 .handle_negative:
-  neg eax                   ; make eax positive
-  mov esi, eax              ; save eax into esi
-  xor eax, eax              ; clear eax
-  mov eax, '-'              ; put '-' into eax
-  stosb                     ; write to edi => num memory location
-  mov eax, esi              ; put original eax value back to eax
-  xor esi, esi              ; clear esi
+  neg rax                   ; make rax positive
+  mov rsi, rax              ; save rax into rsi
+  xor rax, rax              ; clear rax
+  mov rax, '-'              ; put '-' into rax
+  stosb                     ; write to rdi => num memory location
+  mov rax, rsi              ; put original rax value back to rax
+  xor rsi, rsi              ; clear rsi
   jmp .continue_push_chars  ; continue pushing characters
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -382,14 +370,14 @@ int_to_string:
 ; writes provided string to stdout
 ;
 ; Input
-; ECX = string to Display to STDOUT
+; rsi = string to Display to STDOUT
 ; Output:
 ; None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 print_string:
-  call strlen               ; load length of string into edx
-  mov eax, SYS_WRITE        ; write flag
-  mov ebx, STDOUT           ; write to stdout
+  call strlen               ; load length of string into rdx
+  mov rax, SYS_WRITE        ; write flag
+  mov rdi, STDOUT           ; write to stdout
   ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -397,22 +385,22 @@ print_string:
 ; counts the number of characters in provided string
 ;
 ; Input
-; ECX = string to asess
+; rsi = string to asess
 ; Output
-; EDX = length of string
+; rdx = length of string
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 strlen:
-  push eax                  ; save and clear counter
-  xor eax, eax              ; clear counter
-  push ecx                  ; save contents of ecx
+  push rax                  ; save and clear counter
+  xor rax, rax              ; clear counter
+  push rsi                  ; save contents of rsi
 next:
-  cmp [ecx], byte 0         ; check for null character
+  cmp [rsi], byte 0         ; check for null character
   jz null_char              ; exit if null character
-  inc eax                   ; increment counter
-  inc ecx                   ; increment string pointer
+  inc rax                   ; increment counter
+  inc rsi                   ; increment string pointer
   jmp next                  ; keep going
 null_char:
-  mov edx, eax              ; put value of counter into edx (length of string)
-  pop ecx                   ; restore ecx (original string)
-  pop eax                   ; restore eax
+  mov rdx, rax              ; put value of counter into rdx (length of string)
+  pop rsi                   ; restore rsi (original string)
+  pop rax                   ; restore rax
   ret                       ; return
